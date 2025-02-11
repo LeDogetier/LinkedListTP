@@ -5,7 +5,7 @@
 class ofApp : public ofBaseApp{
 
 	public:
-		int positionX = 100;
+		float positionX = 100.f;
 
 		void setup();
 		void update();
