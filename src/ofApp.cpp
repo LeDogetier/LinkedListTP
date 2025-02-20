@@ -1,71 +1,159 @@
 #include "ofApp.h"
+#include "ofApp.h"
+#include <cstdlib>
 
 //--------------------------------------------------------------
-void ofApp::setup(){
+void ofApp::setup() {
+    llist = new SinglyLinkedList();
+}
+
+//--------------------------------------------------------------
+void ofApp::update() {
+    positionX += ofGetLastFrameTime() * 10;
+    positionY = sin(positionX) * amplitude + 350;
+}
+
+//--------------------------------------------------------------
+void ofApp::draw() {
+    SinglyLinkedListNode* temp = llist->head;
+    int i = 0;
+    while (temp != nullptr) {
+        float posX = positionX + i * 200;
+        ofSetColor(0, 0, 255); // blue circle
+        ofDrawCircle(posX, positionY, temp->data);
+        ofSetColor(0); // Black text
+        ofDrawBitmapString(std::to_string(temp->data), posX - 10, positionY + 5);
+
+        temp = temp->next;
+        i++;
+    }
+}
+
+
+
+//--------------------------------------------------------------
+void ofApp::keyPressed(int key) {
+    if (key == 'q' || key == 'Q') {
+        data = rand() % 100;
+        llist->insertNodeAtHead(data);
+    }
+    if (key == 'w' || key == 'W') {
+        data = rand() % 100;
+        llist->insertNodeAtTail(data);
+    }
+    if (key == 'a' || key == 'A') {
+        position = 0;
+        if (llist->size > 0) {
+            llist->deleteNode(position);
+        }
+    }
+    if (key == 's' || key == 'S') {
+        position = llist->size - 1;
+        if (llist->size > 0) {
+            llist->deleteNode(position);
+        }
+    }
+}
+
+//--------------------------------------------------------------
+void ofApp::keyReleased(int key) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::update(){
-	positionX+= ofGetLastFrameTime() * 100;
-}
-
-//--------------------------------------------------------------
-void ofApp::draw(){
-	ofDrawCircle(positionX, 100, 100);
-}
-
-//--------------------------------------------------------------
-void ofApp::keyPressed(int key){
+void ofApp::mouseMoved(int x, int y) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::keyReleased(int key){
+void ofApp::mouseDragged(int x, int y, int button) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y ){
+void ofApp::mousePressed(int x, int y, int button) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseDragged(int x, int y, int button){
+void ofApp::mouseReleased(int x, int y, int button) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button){
+void ofApp::mouseEntered(int x, int y) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button){
+void ofApp::mouseExited(int x, int y) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseEntered(int x, int y){
+void ofApp::windowResized(int w, int h) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseExited(int x, int y){
+void ofApp::gotMessage(ofMessage msg) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::windowResized(int w, int h){
+void ofApp::dragEvent(ofDragInfo dragInfo) {
 
 }
 
-//--------------------------------------------------------------
-void ofApp::gotMessage(ofMessage msg){
-
+void SinglyLinkedList::insertNodeAtHead(int data) {
+    SinglyLinkedListNode* temp = new SinglyLinkedListNode(data);
+    temp->next = head;
+    head = temp;
+    size++;
 }
 
-//--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){ 
+void SinglyLinkedList::insertNodeAtTail(int data) {
+    SinglyLinkedListNode* newNode = new SinglyLinkedListNode(data);
+    if (!head) {
+        head = newNode;
+        size++;
+        return;
+    }
 
+    SinglyLinkedListNode* temp = head;
+    while (temp->next) {
+        temp = temp->next;
+    }
+    temp->next = newNode;
+    size++;
 }
+
+void SinglyLinkedList::deleteNode(int position) {
+    if (!head || position < 0 || position >= size) return;
+
+    SinglyLinkedListNode* temp = head;
+
+    if (position == 0) {
+        head = head->next;
+        delete temp;
+        size--;
+        return;
+    }
+
+    SinglyLinkedListNode* prev = nullptr;
+    for (int i = 0; temp != nullptr && i < position; i++) {
+        prev = temp;
+        temp = temp->next;
+    }
+
+    if (!temp) return;
+
+    prev->next = temp->next;
+    delete temp;
+    size--;
+}
+
+
+
+
+
