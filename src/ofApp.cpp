@@ -22,7 +22,7 @@ void ofApp::draw() {
     while (temp != nullptr) {
         float posX = positionX + i * 200;
 
-        float waveOffset = sin(ofGetElapsedTimef() + i * 0.5) * 50;  // Adjust amplitude & frequency
+        float waveOffset = sin(ofGetElapsedTimef() + i * 0.2) * 50;  // Adjust amplitude & frequency
         float posY = positionY + waveOffset;
 
         if (prevPosX != -1) {
@@ -30,7 +30,7 @@ void ofApp::draw() {
             ofDrawLine(prevPosX, prevPosY, posX, posY);
         }
 
-        ofSetColor(0, 0, 255);  // Blue circle
+        ofSetColor(0);  // Black circle
         ofDrawCircle(posX, posY, temp->data);  // Fixed radius
 
         ofSetColor(255);  // White text
@@ -51,6 +51,18 @@ void ofApp::augmenterAmplitude() {
 
 void ofApp::diminuerAmplitude() {
     amplitude = amplitude - 10;
+}
+
+void ofApp::bougerGauche() {
+    positionX -= 20;
+}
+
+void ofApp::bougerDroite() {
+    positionX += 20;
+}
+
+void ofApp::trierCroissant() {
+
 }
 
 
@@ -82,6 +94,15 @@ void ofApp::keyPressed(int key) {
     }
     if (key == 'x' || key == 'X') {
         diminuerAmplitude();
+    }
+    if (key == OF_KEY_LEFT) {
+        bougerGauche();
+    }
+    if (key == OF_KEY_RIGHT) {
+        bougerDroite();
+    }
+    if (key == 'e' || key == 'E') {
+        llist->sortAscending();
     }
 }
 
@@ -182,6 +203,27 @@ void SinglyLinkedList::deleteNode(int position) {
     delete temp;
     size--;
 }
+
+void SinglyLinkedList::sortAscending() {
+    if (!head || !head->next) return;
+
+    bool swapped;
+    do {
+        swapped = false;
+        SinglyLinkedListNode* current = head;
+        SinglyLinkedListNode* prev = nullptr;
+
+        while (current && current->next) {
+            if (current->data > current->next->data) {
+                std::swap(current->data, current->next->data);
+                swapped = true;
+            }
+            prev = current;
+            current = current->next;
+        }
+    } while (swapped);
+}
+
 
 
 

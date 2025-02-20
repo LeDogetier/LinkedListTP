@@ -36,4 +36,7 @@ public:
 
 	void augmenterAmplitude();
 	void diminuerAmplitude();
+	void bougerGauche();
+	void bougerDroite();
+	void trierCroissant();
 };

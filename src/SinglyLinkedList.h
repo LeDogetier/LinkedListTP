@@ -25,4 +25,5 @@ public:
 	void insertNodeAtHead(int data);
 	void insertNodeAtTail(int data);
 	void deleteNode(int position);
+	void sortAscending();
 };
