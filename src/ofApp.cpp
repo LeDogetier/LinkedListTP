@@ -1,5 +1,4 @@
 #include "ofApp.h"
-#include "ofApp.h"
 #include <cstdlib>
 
 //--------------------------------------------------------------
@@ -17,16 +16,41 @@ void ofApp::update() {
 void ofApp::draw() {
     SinglyLinkedListNode* temp = llist->head;
     int i = 0;
+    float prevPosX = -1;
+    float prevPosY = positionY;
+
     while (temp != nullptr) {
         float posX = positionX + i * 200;
-        ofSetColor(0, 0, 255); // blue circle
-        ofDrawCircle(posX, positionY, temp->data);
-        ofSetColor(0); // Black text
-        ofDrawBitmapString(std::to_string(temp->data), posX - 10, positionY + 5);
+
+        float waveOffset = sin(ofGetElapsedTimef() + i * 0.5) * 50;  // Adjust amplitude & frequency
+        float posY = positionY + waveOffset;
+
+        if (prevPosX != -1) {
+            ofSetColor(255, 0, 0);  // Red line
+            ofDrawLine(prevPosX, prevPosY, posX, posY);
+        }
+
+        ofSetColor(0, 0, 255);  // Blue circle
+        ofDrawCircle(posX, posY, temp->data);  // Fixed radius
+
+        ofSetColor(255);  // White text
+        ofDrawBitmapString(std::to_string(temp->data), posX - 10, posY + 5);
+
+        // Store current position as previous for the next iteration
+        prevPosX = posX;
+        prevPosY = posY;
 
         temp = temp->next;
         i++;
     }
+
+}
+void ofApp::augmenterAmplitude() {
+    amplitude = amplitude + 10;
+}
+
+void ofApp::diminuerAmplitude() {
+    amplitude = amplitude - 10;
 }
 
 
@@ -52,6 +76,12 @@ void ofApp::keyPressed(int key) {
         if (llist->size > 0) {
             llist->deleteNode(position);
         }
+    }
+    if (key == 'z' || key == 'Z') {
+        augmenterAmplitude();
+    }
+    if (key == 'x' || key == 'X') {
+        diminuerAmplitude();
     }
 }
 
